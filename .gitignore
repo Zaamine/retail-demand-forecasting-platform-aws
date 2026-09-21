@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Project data - data lives in S3
+data/raw/
+data/curated/
+data/features/
+data/artifacts/
+data/forecasts/
+
+# Kaggle credentials
+kaggle.json
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Terraform/CDK generated artifacts
+cdk.out/
