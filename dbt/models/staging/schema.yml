@@ -1,0 +1,90 @@
+version: 2
+
+models:
+  - name: stg_sales
+    description: "Typed staging representation of daily store-family sales."
+    columns:
+      - name: id
+        data_tests:
+          - not_null
+          - unique
+      - name: date
+        data_tests:
+          - not_null
+      - name: store_nbr
+        data_tests:
+          - not_null
+      - name: family
+        data_tests:
+          - not_null
+      - name: sales
+        data_tests:
+          - not_null
+      - name: onpromotion
+        data_tests:
+          - not_null
+
+  - name: stg_stores
+    description: "Typed staging representation of store metadata."
+    columns:
+      - name: store_nbr
+        data_tests:
+          - not_null
+          - unique
+      - name: city
+        data_tests:
+          - not_null
+      - name: state
+        data_tests:
+          - not_null
+      - name: type
+        data_tests:
+          - not_null
+      - name: cluster
+        data_tests:
+          - not_null
+
+  - name: stg_oil
+    description: "Typed staging representation of daily WTI oil prices."
+    columns:
+      - name: date
+        data_tests:
+          - not_null
+          - unique
+
+      # dcoilwtico intentionally has missing observations in the raw source.
+
+  - name: stg_holidays_events
+    description: "Typed staging representation of holidays and events."
+    columns:
+      - name: date
+        data_tests:
+          - not_null
+      - name: type
+        data_tests:
+          - not_null
+      - name: locale
+        data_tests:
+          - not_null
+      - name: locale_name
+        data_tests:
+          - not_null
+      - name: description
+        data_tests:
+          - not_null
+      - name: transferred
+        data_tests:
+          - not_null
+
+  - name: stg_transactions
+    description: "Typed staging representation of daily store transactions."
+    columns:
+      - name: date
+        data_tests:
+          - not_null
+      - name: store_nbr
+        data_tests:
+          - not_null
+      - name: transactions
+        data_tests:
+          - not_null

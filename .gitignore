@@ -36,3 +36,17 @@ build/
 
 # Terraform/CDK generated artifacts
 cdk.out/
+
+# Private learning evidence
+evidence/
+
+# dbt generated artifacts
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+
+# Local dbt user metadata
+dbt/.user.yml
+
+# Jupyter automatic checkpoints
+.ipynb_checkpoints/

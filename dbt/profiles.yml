@@ -1,0 +1,16 @@
+retail_demand_forecasting:
+  target: dev
+
+  outputs:
+    dev:
+      type: athena
+      database: awsdatacatalog
+      schema: retail_demand_forecasting_curated
+
+      region_name: eu-west-1
+
+      s3_staging_dir: s3://retail-demand-forecasting-platform-aws-zaamine/artifacts/athena-query-results/dbt/
+      s3_data_dir: s3://retail-demand-forecasting-platform-aws-zaamine/curated/
+      s3_data_naming: table
+
+      threads: 4

@@ -1,0 +1,28 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListRawFavoritaPrefix",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "raw/favorita/*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "ReadRawFavoritaObjects",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/raw/favorita/*"
+    }
+  ]
+}

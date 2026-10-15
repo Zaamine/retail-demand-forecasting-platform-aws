@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: raw
+    database: awsdatacatalog
+    schema: retail_demand_forecasting_raw
+
+    tables:
+      - name: train
+      - name: stores
+      - name: oil
+      - name: holidays_events
+      - name: transactions
