@@ -1,0 +1,18 @@
+[project]
+name = "retail-demand-forecasting-platform-aws"
+version = "0.1.0"
+description = "Production-ready retail demand forecasting platform on AWS."
+requires-python = ">=3.12,<3.13"
+
+dependencies = [
+    "numpy==2.5.3",
+    "pandas==3.0.6",
+    "matplotlib==3.11.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel==7.4.0",
+    "dbt-core==1.12.5",
+    "dbt-athena-community==1.11.1",
+]
