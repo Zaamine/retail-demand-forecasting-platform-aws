@@ -1,0 +1,2 @@
+series_count,xgb_series_win_rate,macro_xgb_mae,macro_seasonal_naive_mae,median_xgb_mae,median_seasonal_naive_mae,median_series_mae_gain
+1782,0.6952861952861953,86.11786700174721,106.47596,9.616018022809708,12.078072,1.0448427540915355

@@ -1,0 +1,8 @@
+metric,value
+Historical deployment count,15.0
+Historical mean fold WAPE,0.13250291033072628
+Historical median fold WAPE,0.12210785228175161
+Historical std fold WAPE,0.02320713246096396
+Historical best fold WAPE,0.11054779517592797
+Historical worst fold WAPE,0.18823909188763627
+Final untouched holdout WAPE,0.1877245082252858

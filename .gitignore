@@ -50,3 +50,18 @@ dbt/.user.yml
 
 # Jupyter automatic checkpoints
 .ipynb_checkpoints/
+
+# Generated forecasting datasets
+data/global_xgboost_development_sales.csv
+
+# Heavy trained-model artifacts are stored in S3
+artifacts/global_xgboost/xgboost_point_forecast_v1.json
+artifacts/global_xgboost/model.tar.gz
+artifacts/global_xgboost/package_v1/
+
+# Generated prediction datasets are stored in S3
+artifacts/global_xgboost/final_holdout_forecast.parquet
+
+# Keep only the compact final tuning experiment record in Git
+notebooks/tuning_checkpoints/*
+!notebooks/tuning_checkpoints/xgb_lightweight_tuning_v1.csv

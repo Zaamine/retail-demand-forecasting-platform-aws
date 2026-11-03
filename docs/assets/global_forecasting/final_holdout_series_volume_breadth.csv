@@ -1,0 +1,2 @@
+series_count,xgb_winning_series,xgb_series_win_rate,total_actual_demand,winning_series_actual_demand,xgb_winning_series_demand_share,xgb_nonwinning_series_demand_share,zero_demand_series
+1782,1239,0.6952861952861953,1.1444796e+07,7.9633515e+06,0.69580543,0.30419445,144
