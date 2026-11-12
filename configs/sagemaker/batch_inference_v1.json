@@ -1,0 +1,18 @@
+{
+  "region": "eu-west-1",
+  "bucket": "retail-demand-forecasting-platform-aws-zaamine",
+  "ecr_repository": "retail-forecast-xgboost-batch",
+  "image_tag": "v1-py312-xgb341",
+  "job_name_prefix": "retail-v1-batch-predict",
+  "instance_type": "ml.t3.medium",
+  "volume_size_gb": 10,
+  "max_runtime_seconds": 900,
+  "model_key": "artifacts/global_xgboost/v1/model.tar.gz",
+  "reference_key": "forecasts/global_xgboost/v1/final_holdout_forecast.parquet",
+  "inputs_prefix": "mlops/batch_inference/v1/inputs",
+  "outputs_prefix": "mlops/batch_inference/v1/outputs",
+  "expected_rows": 24948,
+  "forecast_origin": "2017-08-01",
+  "absolute_tolerance": 0.0001,
+  "relative_tolerance": 1e-06
+}

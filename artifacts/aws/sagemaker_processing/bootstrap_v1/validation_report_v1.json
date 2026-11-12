@@ -1,0 +1,22 @@
+{
+  "status": "PASSED",
+  "validation_type": "frozen_v1_artifact_integrity",
+  "validated_at_utc": "2026-11-12T14:42:13.294240+00:00",
+  "feature_count": 31,
+  "categorical_features": [
+    "family",
+    "store_nbr",
+    "target_day_of_week",
+    "target_month"
+  ],
+  "category_manifest_keys": [
+    "categorical_features",
+    "schema_version",
+    "source"
+  ],
+  "archive_size_bytes": 28303686,
+  "archive_sha256": "003f007a2057bf26b6926a292c9fad2f8e7869ca5e150a6d1b344a3e9a646b73",
+  "archive_members": [
+    "xgboost_point_forecast_v1.json"
+  ]
+}

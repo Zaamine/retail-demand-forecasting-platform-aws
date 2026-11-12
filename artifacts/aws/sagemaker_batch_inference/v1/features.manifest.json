@@ -1,0 +1,10 @@
+{
+  "created_at_utc": "2026-11-12T16:51:43.754587+00:00",
+  "forecast_origin": "2017-08-01",
+  "source": "data/raw/favorita/train/train.csv",
+  "latest_input_date": "2017-08-01",
+  "row_count": 24948,
+  "feature_count": 31,
+  "features_sha256": "0aa2f6032d9a3cc14dc12395b44ce1cfae8ac5f8015b9ba293327e437b425397",
+  "reference_sha256": "61a57c3c3c4ba89b9684380a3044fdceec99c1446a5da4ffb05f6ed4e99b8344"
+}

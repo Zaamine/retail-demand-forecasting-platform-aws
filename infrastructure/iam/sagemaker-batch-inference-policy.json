@@ -1,0 +1,27 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadBatchInputs",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": [
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/batch_inference/v1/inputs/*",
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/artifacts/global_xgboost/v1/model.tar.gz",
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/forecasts/global_xgboost/v1/final_holdout_forecast.parquet"
+      ]
+    },
+    {
+      "Sid": "WriteBatchOutputs",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject"],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/batch_inference/v1/outputs/*"
+    },
+    {
+      "Sid": "PullProjectInferenceImage",
+      "Effect": "Allow",
+      "Action": ["ecr:BatchCheckLayerAvailability", "ecr:BatchGetImage", "ecr:GetDownloadUrlForLayer"],
+      "Resource": "arn:aws:ecr:eu-west-1:634512762949:repository/retail-forecast-xgboost-batch"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "status": "PASSED",
+  "validation_type": "frozen_v1_final_temporal_holdout",
+  "evaluated_at_utc": "2026-11-12T15:35:18.625458+00:00",
+  "forecast_origin": "2017-08-01",
+  "holdout_start": "2017-08-02",
+  "holdout_end": "2017-08-15",
+  "series_count": 1782,
+  "portfolio": {
+    "count": 24948,
+    "actual_abs_volume": 11444795.177573498,
+    "wape": 0.18772450849472005,
+    "mae": 86.11786714497063,
+    "rmse": 271.99633906579334,
+    "normalized_bias": 0.12092500115095109
+  },
+  "input_sha256": {
+    "forecasts": "61a57c3c3c4ba89b9684380a3044fdceec99c1446a5da4ffb05f6ed4e99b8344",
+    "actuals": "6f1615291acd7920e0597835359313c3aa9d0482a74462cc0f2341290f10b643"
+  },
+  "reference_wape": 0.1877245082,
+  "reference_wape_absolute_difference": 2.947200539171746e-10
+}

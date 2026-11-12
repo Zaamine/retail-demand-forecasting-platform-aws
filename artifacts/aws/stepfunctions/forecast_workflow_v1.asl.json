@@ -1,0 +1,220 @@
+{
+  "Comment": "Curated sales -> cloud features -> batch inference -> validated publication",
+  "StartAt": "BuildFeaturesFromCuratedSales",
+  "TimeoutSeconds": 3600,
+  "States": {
+    "BuildFeaturesFromCuratedSales": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sagemaker:createProcessingJob.sync",
+      "Parameters": {
+        "ProcessingJobName.$": "States.Format('retail-v1-orch-feat-{}', $.run_id)",
+        "RoleArn": "arn:aws:iam::634512762949:role/RetailForecastSageMakerExecutionRole",
+        "AppSpecification": {
+          "ImageUri": "634512762949.dkr.ecr.eu-west-1.amazonaws.com/retail-forecast-xgboost-batch@sha256:9eac3c07454a44e1c2a2fd0844cb86aeae5b83036dc37f2e81bab31a59dd06d7",
+          "ContainerEntrypoint": [
+            "python",
+            "/opt/ml/processing/input/code/build_cloud_features.py"
+          ],
+          "ContainerArguments": [
+            "--origin",
+            "2017-08-01"
+          ]
+        },
+        "ProcessingInputs": [
+          {
+            "InputName": "code",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/code",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/inputs/65e8ee5261fe1074a7c97677/code/"
+            }
+          },
+          {
+            "InputName": "sales",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/sales",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/curated/stg_sales/"
+            }
+          },
+          {
+            "InputName": "contract",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/contract",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/inputs/65e8ee5261fe1074a7c97677/code/contract/point_forecast_model_contract_v1.json"
+            }
+          },
+          {
+            "InputName": "categories",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/categories",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/inputs/65e8ee5261fe1074a7c97677/code/categories/categories_v1.json"
+            }
+          },
+          {
+            "InputName": "reference",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/reference",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/forecasts/global_xgboost/v1/final_holdout_forecast.parquet"
+            }
+          }
+        ],
+        "ProcessingOutputConfig": {
+          "Outputs": [
+            {
+              "OutputName": "feat",
+              "S3Output": {
+                "LocalPath": "/opt/ml/processing/output",
+                "S3UploadMode": "EndOfJob",
+                "S3Uri.$": "States.Format('s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/features/{}/', $.run_id)"
+              }
+            }
+          ]
+        },
+        "ProcessingResources": {
+          "ClusterConfig": {
+            "InstanceCount": 1,
+            "InstanceType": "ml.t3.xlarge",
+            "VolumeSizeInGB": 10
+          }
+        },
+        "StoppingCondition": {
+          "MaxRuntimeInSeconds": 900
+        }
+      },
+      "ResultPath": "$.feature_job",
+      "Next": "GenerateAndValidateForecasts"
+    },
+    "GenerateAndValidateForecasts": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sagemaker:createProcessingJob.sync",
+      "Parameters": {
+        "ProcessingJobName.$": "States.Format('retail-v1-orch-pred-{}', $.run_id)",
+        "RoleArn": "arn:aws:iam::634512762949:role/RetailForecastSageMakerExecutionRole",
+        "AppSpecification": {
+          "ImageUri": "634512762949.dkr.ecr.eu-west-1.amazonaws.com/retail-forecast-xgboost-batch@sha256:9eac3c07454a44e1c2a2fd0844cb86aeae5b83036dc37f2e81bab31a59dd06d7",
+          "ContainerEntrypoint": [
+            "python",
+            "/opt/ml/processing/input/code/batch_predict.py"
+          ],
+          "ContainerArguments": [
+            "--expected-rows",
+            "24948",
+            "--atol",
+            "0.0001",
+            "--rtol",
+            "1e-6"
+          ]
+        },
+        "ProcessingInputs": [
+          {
+            "InputName": "code",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/code",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/inputs/65e8ee5261fe1074a7c97677/code/"
+            }
+          },
+          {
+            "InputName": "contract",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/contract",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/inputs/65e8ee5261fe1074a7c97677/code/contract/point_forecast_model_contract_v1.json"
+            }
+          },
+          {
+            "InputName": "categories",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/categories",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/inputs/65e8ee5261fe1074a7c97677/code/categories/categories_v1.json"
+            }
+          },
+          {
+            "InputName": "reference",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/reference",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/forecasts/global_xgboost/v1/final_holdout_forecast.parquet"
+            }
+          },
+          {
+            "InputName": "model",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/model",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri": "s3://retail-demand-forecasting-platform-aws-zaamine/artifacts/global_xgboost/v1/model.tar.gz"
+            }
+          },
+          {
+            "InputName": "features",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/features",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri.$": "States.Format('s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/features/{}/features.parquet', $.run_id)"
+            }
+          },
+          {
+            "InputName": "manifest",
+            "S3Input": {
+              "LocalPath": "/opt/ml/processing/input/manifest",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3Uri.$": "States.Format('s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/features/{}/features.manifest.json', $.run_id)"
+            }
+          }
+        ],
+        "ProcessingOutputConfig": {
+          "Outputs": [
+            {
+              "OutputName": "pred",
+              "S3Output": {
+                "LocalPath": "/opt/ml/processing/output",
+                "S3UploadMode": "EndOfJob",
+                "S3Uri.$": "States.Format('s3://retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/predictions/{}/', $.run_id)"
+              }
+            }
+          ]
+        },
+        "ProcessingResources": {
+          "ClusterConfig": {
+            "InstanceCount": 1,
+            "InstanceType": "ml.t3.medium",
+            "VolumeSizeInGB": 10
+          }
+        },
+        "StoppingCondition": {
+          "MaxRuntimeInSeconds": 900
+        }
+      },
+      "ResultPath": "$.prediction_job",
+      "Next": "PublishValidatedForecasts"
+    },
+    "PublishValidatedForecasts": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:copyObject",
+      "Parameters": {
+        "Bucket": "retail-demand-forecasting-platform-aws-zaamine",
+        "CopySource.$": "States.Format('retail-demand-forecasting-platform-aws-zaamine/mlops/forecast_workflow/v1/predictions/{}/batch_forecasts.parquet', $.run_id)",
+        "Key.$": "States.Format('forecasts/published/v1/origin=2017-08-01/{}/batch_forecasts.parquet', $.run_id)"
+      },
+      "ResultPath": "$.publish_result",
+      "End": true
+    }
+  }
+}

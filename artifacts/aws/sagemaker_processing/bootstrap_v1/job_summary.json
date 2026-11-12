@@ -1,0 +1,11 @@
+{
+    "Name": "retail-v1-artifact-check-20261112-144032",
+    "Status": "Completed",
+    "Started": "2026-11-12T15:41:21.129000+01:00",
+    "Ended": "2026-11-12T15:42:29.639000+01:00",
+    "Resources": {
+        "InstanceCount": 1,
+        "InstanceType": "ml.t3.medium",
+        "VolumeSizeInGB": 10
+    }
+}

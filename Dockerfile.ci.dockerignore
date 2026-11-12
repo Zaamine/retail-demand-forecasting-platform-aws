@@ -1,27 +1,35 @@
-# Exclude everything by default.
+# Deny everything by default.
 *
 
-# Allow forecasting source code and tests.
+# Forecasting source code.
 !src/
 !src/**
+
+# AWS MLOps scripts and processing pipelines.
+!scripts/
+!scripts/**
+!pipelines/
+!pipelines/**
+
+# Automated tests.
 !tests/
 !tests/**
 
-# Allow only the categorical vocabulary.
+# Frozen categorical vocabulary.
 !configs/
 configs/*
 !configs/global_xgboost/
 configs/global_xgboost/*
 !configs/global_xgboost/categories_v1.json
 
-# Allow only the lightweight V1 model contract.
+# Lightweight model contract only.
 !artifacts/
 artifacts/*
 !artifacts/global_xgboost/
 artifacts/global_xgboost/*
 !artifacts/global_xgboost/point_forecast_model_contract_v1.json
 
-# Exclude generated files inside allowed directories.
+# Exclude generated files.
 **/__pycache__/
 **/*.pyc
 **/.DS_Store

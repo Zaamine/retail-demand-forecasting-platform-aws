@@ -1,0 +1,22 @@
+{
+  "model_package_arn": "arn:aws:sagemaker:eu-west-1:634512762949:model-package/retail-global-xgboost-forecasting/1",
+  "version": null,
+  "model_package_group": "retail-global-xgboost-forecasting",
+  "approval_status_requested": "PendingManualApproval",
+  "model_source_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/artifacts/global_xgboost/v1/model.tar.gz",
+  "evaluation_report_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/evaluation/v1/outputs/retail-v1-holdout-eval-20261112-153624-4a0014/evaluation_report.json",
+  "evaluation_processing_job": "retail-v1-holdout-eval-20261112-153624-4a0014",
+  "evaluation_report_sha256": "9c08ee972c84f3ec736a830bacc56b194daad25d2ee72d461dde1161cae30075",
+  "model_sha256": "003f007a2057bf26b6926a292c9fad2f8e7869ca5e150a6d1b344a3e9a646b73",
+  "audit": {
+    "status": "PASSED",
+    "gate_type": "frozen_model_reproduction_audit_not_model_selection",
+    "wape": 0.18772450849472005,
+    "normalized_bias": 0.12092500115095109,
+    "reference_wape": 0.1877245082,
+    "absolute_wape_difference": 2.947200539171746e-10,
+    "evaluated_rows": 24948,
+    "evaluated_series": 1782
+  },
+  "inference_image_registered": false
+}

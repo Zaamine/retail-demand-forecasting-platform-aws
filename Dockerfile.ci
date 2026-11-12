@@ -1,34 +1,29 @@
-# Lightweight container dedicated to forecasting CI tests.
-# The production SageMaker image will be defined separately.
-
+# Lightweight, reproducible container for forecasting CI tests.
 FROM python:3.12-slim-bookworm
 
-# Avoid Python cache files and display logs immediately in CI.
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app/src
+    PYTHONPATH=/app:/app/src
 
-# All subsequent paths are relative to this directory.
 WORKDIR /app
 
-# Install only the dependencies needed by the current tests.
-# Versions match the validated project's Python environment.
+# boto3 installs the compatible botocore dependency.
 RUN python -m pip install --no-cache-dir \
     numpy==2.5.3 \
-    pandas==3.0.6
+    pandas==3.0.6 \
+    boto3==1.40.0
 
-# Include reusable source code and automated tests.
+# Reusable code, AWS scripts, and automated tests.
 COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY pipelines/ ./pipelines/
 COPY tests/ ./tests/
 
-# Include the frozen V1 schema and categorical vocabulary.
-# Heavy model binaries and historical datasets are not required.
+# Frozen V1 configuration required by the tests.
 COPY configs/global_xgboost/categories_v1.json \
      ./configs/global_xgboost/categories_v1.json
 
 COPY artifacts/global_xgboost/point_forecast_model_contract_v1.json \
      ./artifacts/global_xgboost/point_forecast_model_contract_v1.json
 
-# Run the test suite when a container starts.
-# A nonzero exit code will make the CI job fail.
 CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]

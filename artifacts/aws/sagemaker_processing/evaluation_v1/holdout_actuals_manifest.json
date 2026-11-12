@@ -1,0 +1,9 @@
+{
+  "source": "s3://retail-demand-forecasting-platform-aws-zaamine/curated/stg_sales",
+  "glue_table": "retail_demand_forecasting_curated.stg_sales",
+  "extracted_at_utc": "2026-11-12T15:35:07.622562+00:00",
+  "date_start": "2017-08-02",
+  "date_end": "2017-08-15",
+  "row_count": 24948,
+  "note": "Labels reserved exclusively for final out-of-time evaluation"
+}
