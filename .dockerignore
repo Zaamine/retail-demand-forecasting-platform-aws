@@ -1,0 +1,29 @@
+# Exclude all files and nested directories by default.
+**
+
+# Include reusable forecasting source code.
+!src/
+!src/**
+
+# Include the automated tests.
+!tests/
+!tests/**
+
+# Include only the frozen categorical vocabulary.
+!configs/
+!configs/global_xgboost/
+!configs/global_xgboost/categories_v1.json
+
+# Include only the lightweight historical model contract.
+# Large XGBoost binaries and forecast artifacts remain excluded.
+!artifacts/
+!artifacts/global_xgboost/
+!artifacts/global_xgboost/point_forecast_model_contract_v1.json
+
+# Include the CI Dockerfile.
+!Dockerfile.ci
+
+# Exclude generated files, even within allowed directories.
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
