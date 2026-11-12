@@ -1,0 +1,46 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ManageOnlyWeek4BStack",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:CreateChangeSet",
+        "cloudformation:DescribeStacks",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:GetTemplate",
+        "cloudformation:GetTemplateSummary"
+      ],
+      "Resource": "arn:aws:cloudformation:eu-west-1:634512762949:stack/retail-forecast-operations-week4b/*"
+    },
+    {
+      "Sid": "ExecuteDeploymentChangeSets",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:CreateChangeSet",
+        "cloudformation:DescribeChangeSet",
+        "cloudformation:ExecuteChangeSet",
+        "cloudformation:DeleteChangeSet"
+      ],
+      "Resource": [
+        "arn:aws:cloudformation:eu-west-1:634512762949:stack/retail-forecast-operations-week4b/*",
+        "arn:aws:cloudformation:eu-west-1:634512762949:changeSet/awscli-cloudformation-deploy-*/*"
+      ]
+    },
+    {
+      "Sid": "ValidateTemplates",
+      "Effect": "Allow",
+      "Action": "cloudformation:ValidateTemplate",
+      "Resource": "*"
+    },
+    {
+      "Sid": "UpdateOperationsDashboard",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutDashboard",
+        "cloudwatch:GetDashboard"
+      ],
+      "Resource": "arn:aws:cloudwatch::634512762949:dashboard/RetailForecast-Week4B-Operations"
+    }
+  ]
+}

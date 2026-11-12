@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::634512762949:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": [
+            "repo:Zaamine/retail-demand-forecasting-platform-aws:ref:refs/heads/main",
+            "repo:Zaamine@66734927/retail-demand-forecasting-platform-aws@1386418365:ref:refs/heads/main"
+          ]
+        }
+      }
+    }
+  ]
+}

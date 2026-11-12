@@ -65,3 +65,7 @@ artifacts/global_xgboost/final_holdout_forecast.parquet
 # Keep only the compact final tuning experiment record in Git
 notebooks/tuning_checkpoints/*
 !notebooks/tuning_checkpoints/xgb_lightweight_tuning_v1.csv
+
+# AWS execution datasets: keep locally and in S3, not in Git.
+artifacts/aws/**/*.parquet
+artifacts/aws/**/*.csv
