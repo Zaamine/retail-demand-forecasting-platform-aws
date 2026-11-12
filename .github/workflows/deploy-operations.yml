@@ -1,0 +1,98 @@
+name: Deploy AWS Operations
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: retail-operations-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy CloudFormation Operations
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Verify CloudFormation template
+        run: |
+          python scripts/render_week4b_stack.py > /tmp/operations-rendered.json
+
+          diff -u \
+            infrastructure/cloudformation/operations_week4b.json \
+            /tmp/operations-rendered.json
+
+          python - <<'PY'
+          import json
+
+          with open("/tmp/operations-rendered.json") as f:
+              template = json.load(f)
+
+          resources = template["Resources"]
+
+          assert resources["DisabledSchedule"]["Properties"]["State"] == "DISABLED"
+          assert "DeploymentRevision" in template["Parameters"]
+
+          assert sum(
+              resource["Type"] == "AWS::CloudWatch::Alarm"
+              for resource in resources.values()
+          ) == 6
+
+          print("Infrastructure template verified")
+          PY
+
+      - name: Authenticate to AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::634512762949:role/RetailForecastGitHubOpsDeployRole
+          role-session-name: retail-ops-${{ github.run_id }}
+          aws-region: eu-west-1
+          allowed-account-ids: '634512762949'
+
+      - name: Validate CloudFormation
+        run: |
+          aws sts get-caller-identity
+
+          aws cloudformation validate-template \
+            --template-body file://infrastructure/cloudformation/operations_week4b.json \
+            --region eu-west-1
+
+      - name: Deploy Operations stack
+        run: |
+          aws cloudformation deploy \
+            --stack-name retail-forecast-operations-week4b \
+            --template-file infrastructure/cloudformation/operations_week4b.json \
+            --parameter-overrides DeploymentRevision="${GITHUB_SHA}" \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --region eu-west-1 \
+            --no-fail-on-empty-changeset
+
+      - name: Verify deployed revision
+        run: |
+          STATUS=$(aws cloudformation describe-stacks \
+            --stack-name retail-forecast-operations-week4b \
+            --query 'Stacks[0].StackStatus' \
+            --output text)
+
+          REVISION=$(aws cloudformation describe-stacks \
+            --stack-name retail-forecast-operations-week4b \
+            --query "Stacks[0].Outputs[?OutputKey=='DeploymentRevision'].OutputValue | [0]" \
+            --output text)
+
+          echo "Stack status: $STATUS"
+          echo "Deployed revision: $REVISION"
+
+          test "$STATUS" = "UPDATE_COMPLETE"
+          test "$REVISION" = "$GITHUB_SHA"
+
+          echo "OPERATIONS CD: PASSED"
