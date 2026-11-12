@@ -1,0 +1,10 @@
+{
+  "status": "PASSED",
+  "validated_at_utc": "2026-11-12T18:56:07.038657+00:00",
+  "forecast_origin": "2017-08-15",
+  "max_sales_date": "2017-08-15",
+  "forecast_rows": 24948,
+  "feature_count": 31,
+  "features_sha256": "42423d146659adf2e3ec39aa4ff6e383e17cbfc8620a85ce2f2febacf6025f43",
+  "test_sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+}

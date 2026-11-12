@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadFrozenHoldoutPredictions",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/forecasts/global_xgboost/v1/final_holdout_forecast.parquet"
+    },
+    {
+      "Sid": "ReadEvaluationJobInputs",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/evaluation/v1/inputs/*"
+    },
+    {
+      "Sid": "WriteEvaluationJobOutputs",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject"],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/evaluation/v1/outputs/*"
+    }
+  ]
+}

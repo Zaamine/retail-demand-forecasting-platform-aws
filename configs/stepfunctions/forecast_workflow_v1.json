@@ -1,0 +1,12 @@
+{
+  "region": "eu-west-1",
+  "account_id": "634512762949",
+  "bucket": "retail-demand-forecasting-platform-aws-zaamine",
+  "state_machine_name": "retail-v1-forecast-workflow",
+  "state_role_name": "RetailForecastStepFunctionsExecutionRole",
+  "sagemaker_role_name": "RetailForecastSageMakerExecutionRole",
+  "ecr_repository": "retail-forecast-xgboost-batch",
+  "image_tag": "v1-py312-xgb341",
+  "forecast_origin": "2017-08-01",
+  "prefix": "mlops/forecast_workflow/v1"
+}

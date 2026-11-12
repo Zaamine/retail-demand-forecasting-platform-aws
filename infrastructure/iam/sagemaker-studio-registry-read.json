@@ -1,0 +1,11 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadChampionV1EvaluationReport",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/evaluation/v1/outputs/retail-v1-holdout-eval-20261112-153624-4a0014/evaluation_report.json"
+    }
+  ]
+}

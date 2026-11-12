@@ -1,0 +1,71 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadBootstrapInputs",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/artifacts/global_xgboost/v1/*",
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/bootstrap/v1/inputs/*"
+      ]
+    },
+    {
+      "Sid": "WriteBootstrapOutputs",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/bootstrap/v1/outputs/*"
+      ]
+    },
+    {
+      "Sid": "InspectProjectBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine"
+    },
+    {
+      "Sid": "WriteProcessingLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": "arn:aws:logs:eu-west-1:*:log-group:/aws/sagemaker/ProcessingJobs:*"
+    },
+    {
+      "Sid": "CreateProcessingLogGroup",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup"
+      ],
+      "Resource": "arn:aws:logs:eu-west-1:*:log-group:/aws/sagemaker/ProcessingJobs"
+    },
+    {
+      "Sid": "AuthorizeECRPull",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "PullManagedScikitLearnImage",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage"
+      ],
+      "Resource": "arn:aws:ecr:eu-west-1:141502667606:repository/sagemaker-scikit-learn"
+    }
+  ]
+}

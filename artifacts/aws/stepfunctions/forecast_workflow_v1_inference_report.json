@@ -1,0 +1,17 @@
+{
+  "status": "PASSED",
+  "validation_type": "frozen_v1_batch_inference_parity",
+  "validated_at_utc": "2026-11-12T17:59:53.564732+00:00",
+  "forecast_origin": "2017-08-01",
+  "forecast_rows": 24948,
+  "feature_count": 31,
+  "mismatched_rows": 0,
+  "maximum_raw_prediction_difference": 0.0,
+  "maximum_clipped_prediction_difference": 0.0,
+  "atol": 0.0001,
+  "rtol": 1e-06,
+  "model_sha256": "003f007a2057bf26b6926a292c9fad2f8e7869ca5e150a6d1b344a3e9a646b73",
+  "feature_snapshot_sha256": "f3a25ab60fc8f8123c8a5ac77fdb837e1613fd2b63582361e156eeb6cc37138b",
+  "xgboost_version": "3.4.1",
+  "python_version": "3.12.9"
+}

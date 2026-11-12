@@ -1,0 +1,23 @@
+{
+  "region": "eu-west-1",
+  "bucket": "retail-demand-forecasting-platform-aws-zaamine",
+  "model_package_group_name": "retail-global-xgboost-forecasting",
+  "model_artifact_key": "artifacts/global_xgboost/v1/model.tar.gz",
+  "expected_model_sha256": "003f007a2057bf26b6926a292c9fad2f8e7869ca5e150a6d1b344a3e9a646b73",
+  "expected_model_size_bytes": 28303686,
+  "evaluation_output_prefix": "mlops/evaluation/v1/outputs",
+  "holdout_audit": {
+    "forecast_origin": "2017-08-01",
+    "holdout_start": "2017-08-02",
+    "holdout_end": "2017-08-15",
+    "expected_rows": 24948,
+    "expected_series": 1782,
+    "reference_wape": 0.1877245082,
+    "wape_reproduction_tolerance": 0.00001,
+    "expected_forecasts_sha256": "61a57c3c3c4ba89b9684380a3044fdceec99c1446a5da4ffb05f6ed4e99b8344"
+  },
+  "registration": {
+    "approval_status": "PendingManualApproval",
+    "task": "REGRESSION"
+  }
+}
