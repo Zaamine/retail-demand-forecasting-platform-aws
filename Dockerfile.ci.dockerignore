@@ -1,0 +1,27 @@
+# Exclude everything by default.
+*
+
+# Allow forecasting source code and tests.
+!src/
+!src/**
+!tests/
+!tests/**
+
+# Allow only the categorical vocabulary.
+!configs/
+configs/*
+!configs/global_xgboost/
+configs/global_xgboost/*
+!configs/global_xgboost/categories_v1.json
+
+# Allow only the lightweight V1 model contract.
+!artifacts/
+artifacts/*
+!artifacts/global_xgboost/
+artifacts/global_xgboost/*
+!artifacts/global_xgboost/point_forecast_model_contract_v1.json
+
+# Exclude generated files inside allowed directories.
+**/__pycache__/
+**/*.pyc
+**/.DS_Store

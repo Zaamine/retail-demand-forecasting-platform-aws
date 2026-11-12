@@ -1,0 +1,34 @@
+# Lightweight container dedicated to forecasting CI tests.
+# The production SageMaker image will be defined separately.
+
+FROM python:3.12-slim-bookworm
+
+# Avoid Python cache files and display logs immediately in CI.
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app/src
+
+# All subsequent paths are relative to this directory.
+WORKDIR /app
+
+# Install only the dependencies needed by the current tests.
+# Versions match the validated project's Python environment.
+RUN python -m pip install --no-cache-dir \
+    numpy==2.5.3 \
+    pandas==3.0.6
+
+# Include reusable source code and automated tests.
+COPY src/ ./src/
+COPY tests/ ./tests/
+
+# Include the frozen V1 schema and categorical vocabulary.
+# Heavy model binaries and historical datasets are not required.
+COPY configs/global_xgboost/categories_v1.json \
+     ./configs/global_xgboost/categories_v1.json
+
+COPY artifacts/global_xgboost/point_forecast_model_contract_v1.json \
+     ./artifacts/global_xgboost/point_forecast_model_contract_v1.json
+
+# Run the test suite when a container starts.
+# A nonzero exit code will make the CI job fail.
+CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]

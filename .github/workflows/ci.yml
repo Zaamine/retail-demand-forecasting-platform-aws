@@ -1,0 +1,43 @@
+name: Forecasting CI
+
+# Validate changes on main, pull requests, and manual execution.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# CI only needs permission to read the repository.
+permissions:
+  contents: read
+
+jobs:
+  forecasting-tests:
+    name: Dockerized forecasting tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      # Download the exact repository revision being tested.
+      # Do not persist Git credentials after checkout.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # Build an isolated environment from the committed source.
+      # Tag the image with the Git commit for traceability.
+      - name: Build CI Docker image
+        run: |
+          docker build \
+            --file Dockerfile.ci \
+            --tag retail-forecast-ci:${{ github.sha }} \
+            .
+
+      # Docker propagates the Python test process exit code.
+      # Any failing test causes the workflow to fail.
+      - name: Run unit and integration tests
+        run: |
+          docker run --rm \
+            retail-forecast-ci:${{ github.sha }}
