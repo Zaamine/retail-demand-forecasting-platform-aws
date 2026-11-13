@@ -1,0 +1,17 @@
+{
+  "last_training_date": "2017-08-01",
+  "required_labeled_end": "2017-08-15",
+  "latest_observed_date": "2017-08-15",
+  "expected_series": 1782,
+  "horizon_days": 14,
+  "training_started": false,
+  "champion_modified": false,
+  "status": "READY",
+  "reason": "COMPLETE_NEW_LABELED_WINDOW",
+  "new_labels_start": "2017-08-02",
+  "new_labels_end": "2017-08-15",
+  "new_labeled_rows": 24948,
+  "challenger_training_cutoff": "2017-08-15",
+  "next_step": "Build new supervised dataset and train challenger",
+  "source": "glue:retail_demand_forecasting_curated.stg_sales"
+}

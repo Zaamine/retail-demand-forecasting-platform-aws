@@ -22,6 +22,11 @@ configs/*
 configs/global_xgboost/*
 !configs/global_xgboost/categories_v1.json
 
+# Include only the CT configs required by the integration tests.
+!configs/sagemaker/
+configs/sagemaker/*
+!configs/sagemaker/ct_*.json
+
 # Lightweight model contract only.
 !artifacts/
 artifacts/*

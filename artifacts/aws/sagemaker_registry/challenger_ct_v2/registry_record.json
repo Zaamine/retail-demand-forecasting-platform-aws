@@ -1,0 +1,30 @@
+{
+  "model_package_arn": "arn:aws:sagemaker:eu-west-1:634512762949:model-package/retail-global-xgboost-forecasting/2",
+  "model_package_group": "retail-global-xgboost-forecasting",
+  "approval_status_requested": "PendingManualApproval",
+  "model_role": "challenger_v2_unapproved",
+  "source_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/artifacts/global_xgboost/challenger_v2/sha256-12281d2687da4d2d1c053653e45921bad2d1bdaa1e4187acf59a753b44be202b/model.tar.gz",
+  "original_training_model_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/challengers/cutoff=2017-08-15/mode=full/20261113-111427-6afc15/model.tar.gz",
+  "model_sha256": "12281d2687da4d2d1c053653e45921bad2d1bdaa1e4187acf59a753b44be202b",
+  "training_report_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/challengers/cutoff=2017-08-15/mode=full/20261113-111427-6afc15/training_report.json",
+  "training_report_sha256": "c2b31aebadf4cc11ff1a8316e757ce2cdf6bcca8b4e95aaa389ec74e0eea335e",
+  "inference_audit_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/inference/outputs/20261113-152818-b36dae/inference_report.json",
+  "inference_audit_sha256": "a2bdb298a86780730bebb90bedf1b28fe8c2190b5278d78dc2f7ba851c8214dc",
+  "dataset_manifest_uri": "s3://retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/datasets/cutoff=2017-08-15/20261113-100354-4a26ce/dataset_manifest.json",
+  "dataset_manifest_sha256": "47f6888417938b2f0b0b62a5577c1e63b0b638f7d755071028169c0343af5e67",
+  "training_cutoff": "2017-08-15",
+  "forecast_origin": "2017-08-15",
+  "forecast_window": "2017-08-16..2017-08-29",
+  "has_new_out_of_sample_metric": false,
+  "promotion_eligible": false,
+  "training_execution": "SageMaker Processing (CPU)",
+  "inference_image_registered": false,
+  "champion_v1_package_arn": "arn:aws:sagemaker:eu-west-1:634512762949:model-package/retail-global-xgboost-forecasting/1",
+  "champion_v1_unchanged": true,
+  "processing_jobs": {
+    "ct2": "arn:aws:sagemaker:eu-west-1:634512762949:processing-job/ct-dataset-20261113-100354-4a26ce",
+    "ct3": "arn:aws:sagemaker:eu-west-1:634512762949:processing-job/ct-train-full-20261113-111427-6afc15",
+    "ct4": "arn:aws:sagemaker:eu-west-1:634512762949:processing-job/ct-inference-20261113-152818-b36dae"
+  },
+  "volume_change_pct_descriptive_only": -9.311842
+}

@@ -23,6 +23,9 @@ COPY tests/ ./tests/
 COPY configs/global_xgboost/categories_v1.json \
      ./configs/global_xgboost/categories_v1.json
 
+# CT tests import these frozen JSON configurations.
+COPY configs/sagemaker/ct_*.json ./configs/sagemaker/
+
 COPY artifacts/global_xgboost/point_forecast_model_contract_v1.json \
      ./artifacts/global_xgboost/point_forecast_model_contract_v1.json
 

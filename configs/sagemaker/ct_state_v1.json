@@ -1,0 +1,7 @@
+{
+  "region": "eu-west-1",
+  "account_id": "634512762949",
+  "bucket": "retail-demand-forecasting-platform-aws-zaamine",
+  "checkpoint_key": "mlops/continuous_training/v1/state/last_successful_ct.json",
+  "challenger_package_arn": "arn:aws:sagemaker:eu-west-1:634512762949:model-package/retail-global-xgboost-forecasting/2"
+}

@@ -1,0 +1,20 @@
+{
+  "region": "eu-west-1",
+  "account_id": "634512762949",
+  "bucket": "retail-demand-forecasting-platform-aws-zaamine",
+  "sagemaker_role_name": "RetailForecastSageMakerExecutionRole",
+  "ecr_repository": "retail-forecast-xgboost-batch",
+  "ecr_image_digest": "sha256:9eac3c07454a44e1c2a2fd0844cb86aeae5b83036dc37f2e81bab31a59dd06d7",
+  "processing_instance_type": "ml.t3.xlarge",
+  "volume_size_gb": 20,
+  "max_runtime_seconds": 1200,
+  "feature_manifest_search_prefix": "mlops/test_forecast/v2/features/",
+  "feature_sha256": "42423d146659adf2e3ec39aa4ff6e383e17cbfc8620a85ce2f2febacf6025f43",
+  "champion_model_key": "artifacts/global_xgboost/v1/model.tar.gz",
+  "champion_sha256": "003f007a2057bf26b6926a292c9fad2f8e7869ca5e150a6d1b344a3e9a646b73",
+  "challenger_prefix": "mlops/continuous_training/v1/challengers/cutoff=2017-08-15/mode=full/20261113-111427-6afc15/",
+  "challenger_sha256": "12281d2687da4d2d1c053653e45921bad2d1bdaa1e4187acf59a753b44be202b",
+  "ct2_manifest_sha256": "47f6888417938b2f0b0b62a5577c1e63b0b638f7d755071028169c0343af5e67",
+  "code_prefix": "mlops/continuous_training/v1/inference/code",
+  "output_prefix": "mlops/continuous_training/v1/inference/outputs"
+}

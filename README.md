@@ -78,15 +78,29 @@ with a promotion/counterfactual analysis layer and, later, a Bedrock-based forec
 
 ## Project Status
 
-**Week 1 — Data, statistics and forecasting foundations**
+**AWS MLOps — Week 4B validated (November 2026).**
 
-Current focus:
+- Global XGBoost V1: 1,782 store-family series, 14-day forecasts,
+  final holdout WAPE 18.77% versus 23.21% seasonal naive
+  (19.12% relative improvement).
+- SageMaker Processing: cloud artifact validation, batch inference,
+  and reproducibility checks completed.
+- SageMaker Model Registry: V1 champion and V2 challenger registered;
+  V2 remains PendingManualApproval.
+- Step Functions: V1/V2 forecasting workflows and CT-6C readiness
+  orchestration demonstrated on AWS.
+- Continuous training CT-2 through CT-5: guarded manual execution,
+  with no automatic model promotion.
+- CT-6A/6B/6C: checkpoint-aware readiness, DynamoDB concurrency lock,
+  and successful cloud execution of the SKIPPED branch.
+- CloudWatch monitoring, alerts, and GitHub Actions CI/CD integrated.
 
-- project repository setup;
-- AWS cost controls;
-- S3 data ingestion;
-- raw-data schema and business-grain exploration;
-- temporal forecasting baseline and backtesting.
+**Current limitation:** CT-6C deliberately blocks READY because
+automatic CT-2 through CT-5 orchestration is not implemented.
+EventBridge scheduling remains disabled.
+
+**Next:** Forecast Investigation Agent, GenAI/LLMOps,
+agent evaluation, and AgentOps.
 
 ## Repository Structure
 

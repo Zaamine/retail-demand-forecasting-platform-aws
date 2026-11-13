@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CTDatasetReadWriteOnly",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/*"
+    },
+    {
+      "Sid": "CTDatasetListOnly",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": "mlops/continuous_training/v1/*"
+        }
+      }
+    }
+  ]
+}
