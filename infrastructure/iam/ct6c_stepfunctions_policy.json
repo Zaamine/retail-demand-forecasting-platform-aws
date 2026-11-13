@@ -1,0 +1,66 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LockAccess",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": "arn:aws:dynamodb:eu-west-1:634512762949:table/RetailForecastCT6CExecutionLock"
+    },
+    {
+      "Sid": "CreateOnlyCTReadinessJobs",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateProcessingJob",
+        "sagemaker:DescribeProcessingJob",
+        "sagemaker:StopProcessingJob",
+        "sagemaker:AddTags",
+        "sagemaker:ListTags"
+      ],
+      "Resource": "arn:aws:sagemaker:eu-west-1:634512762949:processing-job/ct-gate-*"
+    },
+    {
+      "Sid": "PassExistingSageMakerExecutionRole",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::634512762949:role/RetailForecastSageMakerExecutionRole",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "sagemaker.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "ValidateCuratedSourceInGlue",
+      "Effect": "Allow",
+      "Action": "glue:GetTable",
+      "Resource": [
+        "arn:aws:glue:eu-west-1:634512762949:catalog",
+        "arn:aws:glue:eu-west-1:634512762949:database/retail_demand_forecasting_curated",
+        "arn:aws:glue:eu-west-1:634512762949:table/retail_demand_forecasting_curated/stg_sales"
+      ]
+    },
+    {
+      "Sid": "ReadReadinessReports",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": [
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/orchestration/outputs/*",
+        "arn:aws:s3:::retail-demand-forecasting-platform-aws-zaamine/mlops/continuous_training/v1/state/last_successful_ct.json"
+      ]
+    },
+    {
+      "Sid": "ProcessingJobSyncEventBridge",
+      "Effect": "Allow",
+      "Action": [
+        "events:PutRule",
+        "events:PutTargets",
+        "events:DescribeRule"
+      ],
+      "Resource": "arn:aws:events:eu-west-1:634512762949:rule/StepFunctionsGetEventsForSageMaker*JobsRule"
+    }
+  ]
+}

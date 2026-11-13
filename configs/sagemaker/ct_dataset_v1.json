@@ -1,0 +1,16 @@
+{
+  "region": "eu-west-1",
+  "account_id": "634512762949",
+  "bucket": "retail-demand-forecasting-platform-aws-zaamine",
+  "readiness_report": "artifacts/aws/continuous_training/readiness_v1.json",
+  "source_prefix": "curated/stg_sales/",
+  "output_prefix": "mlops/continuous_training/v1/datasets",
+  "code_prefix": "mlops/continuous_training/v1/code",
+  "sagemaker_role_name": "RetailForecastSageMakerExecutionRole",
+  "ecr_repository": "retail-forecast-xgboost-batch",
+  "image_tag": "v1-py312-xgb341",
+  "cutoff": "2017-08-15",
+  "processing_instance_type": "ml.t3.xlarge",
+  "volume_size_gb": 20,
+  "max_runtime_seconds": 3600
+}
