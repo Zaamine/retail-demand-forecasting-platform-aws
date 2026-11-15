@@ -1,0 +1,19 @@
+{
+  "ct2_manifest_sha256": "47f6888417938b2f0b0b62a5577c1e63b0b638f7d755071028169c0343af5e67",
+  "ct2_processing_job": "ct-dataset-20261113-100354-4a26ce",
+  "ct3_processing_job": "ct-train-full-20261113-111427-6afc15",
+  "ct3_training_report_sha256": "c2b31aebadf4cc11ff1a8316e757ce2cdf6bcca8b4e95aaa389ec74e0eea335e",
+  "ct4_inference_report_sha256": "a2bdb298a86780730bebb90bedf1b28fe8c2190b5278d78dc2f7ba851c8214dc",
+  "ct4_processing_job": "ct-inference-20261113-152818-b36dae",
+  "last_challenger_approval_status": "PendingManualApproval",
+  "last_challenger_sha256": "12281d2687da4d2d1c053653e45921bad2d1bdaa1e4187acf59a753b44be202b",
+  "last_cycle_new_out_of_sample_wape_available": false,
+  "last_cycle_promoted": false,
+  "last_registered_challenger_arn": "arn:aws:sagemaker:eu-west-1:634512762949:model-package/retail-global-xgboost-forecasting/2",
+  "last_successful_ct_cutoff": "2017-08-15",
+  "last_successful_cycle_phase": "CHALLENGER_REGISTERED_PENDING",
+  "note": "Cutoff completed via registered pending challenger, not approved deployment or demonstrated forecast accuracy.",
+  "registered_champion_reference_arn": "arn:aws:sagemaker:eu-west-1:634512762949:model-package/retail-global-xgboost-forecasting/1",
+  "registered_champion_reference_sha256": "003f007a2057bf26b6926a292c9fad2f8e7869ca5e150a6d1b344a3e9a646b73",
+  "schema_version": "ct_checkpoint_v1"
+}
