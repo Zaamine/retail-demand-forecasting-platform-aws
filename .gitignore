@@ -69,3 +69,8 @@ notebooks/tuning_checkpoints/*
 # AWS execution datasets: keep locally and in S3, not in Git.
 artifacts/aws/**/*.parquet
 artifacts/aws/**/*.csv
+
+/notebooks/mlflow_tracking/
+/notebooks/mlruns/
+/artifacts/evaluation/
+/artifacts/aws/bedrock/

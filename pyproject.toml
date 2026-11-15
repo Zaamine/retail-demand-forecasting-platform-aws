@@ -19,6 +19,12 @@ dev = [
     # Jupyter kernel used to execute the project notebooks.
     "ipykernel==7.4.0",
     "pytest==9.2.0",
+    "boto3==1.43.113",
+    "mlflow==3.18.0",
+    "torch==2.15.0",
+    "transformers==5.23.0",
+    "peft==0.21.3",
+    "accelerate==1.15.0",
 
     # dbt CLI and Athena adapter used to build and test the curated data layer.
     "dbt-core==1.12.5",
