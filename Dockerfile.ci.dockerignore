@@ -38,3 +38,24 @@ artifacts/global_xgboost/*
 **/__pycache__/
 **/*.pyc
 **/.DS_Store
+
+# Curated knowledge, without copying unrelated documents.
+!docs/
+docs/*
+!docs/knowledge/
+docs/knowledge/*
+!docs/knowledge/*.md
+!docs/assets/
+docs/assets/*
+!docs/assets/global_forecasting/
+docs/assets/global_forecasting/*
+!docs/assets/global_forecasting/final_holdout_historical_context.csv
+
+# Include only the frozen cloud evaluation JSON.
+!artifacts/aws/
+artifacts/aws/*
+!artifacts/aws/sagemaker_registry/
+artifacts/aws/sagemaker_registry/*
+!artifacts/aws/sagemaker_registry/champion_v1/
+artifacts/aws/sagemaker_registry/champion_v1/*
+!artifacts/aws/sagemaker_registry/champion_v1/evaluation_report_cloud.json

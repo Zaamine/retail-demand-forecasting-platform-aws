@@ -11,7 +11,10 @@ WORKDIR /app
 RUN python -m pip install --no-cache-dir \
     numpy==2.5.3 \
     pandas==3.0.6 \
-    boto3==1.40.0
+    boto3==1.43.113 \
+    pytest==9.2.0 \
+    scikit-learn==1.9.1 \
+    mcp==2.3.0
 
 # Reusable code, AWS scripts, and automated tests.
 COPY src/ ./src/
@@ -29,4 +32,14 @@ COPY configs/sagemaker/ct_*.json ./configs/sagemaker/
 COPY artifacts/global_xgboost/point_forecast_model_contract_v1.json \
      ./artifacts/global_xgboost/point_forecast_model_contract_v1.json
 
-CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]
+CMD ["python", "-m", "pytest", "tests", "-q"]
+
+# Curated knowledge needed by agent and retrieval tests.
+COPY docs/knowledge/ ./docs/knowledge/
+
+# Frozen evaluation evidence needed by knowledge facts tests.
+COPY docs/assets/global_forecasting/final_holdout_historical_context.csv \
+     ./docs/assets/global_forecasting/final_holdout_historical_context.csv
+
+COPY artifacts/aws/sagemaker_registry/champion_v1/evaluation_report_cloud.json \
+     ./artifacts/aws/sagemaker_registry/champion_v1/evaluation_report_cloud.json

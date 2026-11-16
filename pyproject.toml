@@ -15,11 +15,18 @@ dependencies = [
 # Development and analytical tooling used to explore, transform, and validate
 # the project without being part of the core forecasting runtime.
 [project.optional-dependencies]
+agent = [
+    "boto3==1.43.113",
+    "mcp==2.3.0",
+    "pyarrow==26.0.0",
+]
 dev = [
     # Jupyter kernel used to execute the project notebooks.
     "ipykernel==7.4.0",
     "pytest==9.2.0",
     "boto3==1.43.113",
+    "mcp==2.3.0",
+    "pyarrow==26.0.0",
     "mlflow==3.18.0",
     "torch==2.15.0",
     "transformers==5.23.0",
