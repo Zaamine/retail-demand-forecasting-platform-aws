@@ -1,7 +1,10 @@
 import asyncio
+import os
 import logging
 import streamlit as st
 import altair as alt
+import boto3
+from botocore.config import Config
 
 st.set_page_config(
     page_title="Retail Planner",
@@ -46,6 +49,8 @@ import pandas as pd
 
 from planner_app.snapshot import load_verified_forecasts
 from planner_app.local_agent import build_local_planner, ask_local_planner
+from planner_app.bedrock_agent import build_bedrock_planner, ask_bedrock_planner
+from planner_app.live_quota import LocallyCappedBedrock
 from planner_app.conversation import plan_turn, context_from_verified_result
 
 
@@ -147,7 +152,7 @@ st.altair_chart(
             ),
         ],
     ),
-    use_container_width=True,
+    width="stretch",
 )
 
 with st.expander("Daily sales forecast"):
@@ -184,19 +189,69 @@ if question:
     else:
         with st.spinner("Checking published sales forecasts..."):
             try:
-                planner, mcp_server = build_local_planner(
-                    Path(__file__).resolve().parents[1],
-                    forecasts,
-                    forecast_service,
-                )
+                # LIVE_BEDROCK_UI_V1
+                if os.getenv("RETAIL_PLANNER_ENABLE_BEDROCK") == "1":
+                    root = Path(__file__).resolve().parents[1]
 
-                result = asyncio.run(
-                    ask_local_planner(
-                        action["question"],
-                        planner,
-                        mcp_server,
+                    bedrock_client = boto3.Session(
+                        region_name="eu-west-1"
+                    ).client(
+                        "bedrock-runtime",
+                        config=Config(
+                            connect_timeout=5,
+                            read_timeout=60,
+                            retries={"total_max_attempts": 1},
+                        ),
                     )
-                )
+
+                    capped_client = LocallyCappedBedrock(
+                        client=bedrock_client,
+                        quota_path=(
+                            root / "data/forecasts"
+                            / ".streamlit_bedrock_converse_quota"
+                        ),
+                        max_calls=12,
+                    )
+
+                    planner, mcp_server, budget = build_bedrock_planner(
+                        root,
+                        forecasts,
+                        forecast_service,
+                        capped_client,
+                        enabled=True,
+                        max_calls=6,
+                    )
+
+                    result = asyncio.run(
+                        ask_bedrock_planner(
+                            action["question"],
+                            planner,
+                            mcp_server,
+                        )
+                    )
+
+                    logging.warning(
+                        "Bedrock UI: status=%s, calls=%s, "
+                        "input_tokens=%s, output_tokens=%s",
+                        result.get("status"),
+                        budget.attempts,
+                        sum(r["input_tokens"] for r in budget.records),
+                        sum(r["output_tokens"] for r in budget.records),
+                    )
+                else:
+                    planner, mcp_server = build_local_planner(
+                        Path(__file__).resolve().parents[1],
+                        forecasts,
+                        forecast_service,
+                    )
+
+                    result = asyncio.run(
+                        ask_local_planner(
+                            action["question"],
+                            planner,
+                            mcp_server,
+                        )
+                    )
 
             except Exception:
                 logging.exception("Retail Planner execution failed")
@@ -206,7 +261,10 @@ if question:
                 )
 
             else:
-                if result["status"] == "verified_analysis_evidence":
+                if result["status"] in (
+                    "verified_analysis_evidence",
+                    "verified_sales_evidence",
+                ):
                     response = result["answer"]
 
                     context = context_from_verified_result(result)
@@ -217,6 +275,12 @@ if question:
                     response = (
                         "I couldn't verify this result against "
                         "our published forecasts."
+                    )
+
+                elif result["status"] == "blocked_execution":
+                    response = (
+                        "I couldn't complete this request safely. "
+                        "Please try again later."
                     )
 
                 elif action.get("used_context"):

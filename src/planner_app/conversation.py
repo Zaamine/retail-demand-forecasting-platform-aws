@@ -2,6 +2,8 @@
 
 import re
 
+from agent.planning_contract import PlanningContract
+
 
 GREETINGS = {
     "hi", "hello", "hey",
@@ -24,7 +26,49 @@ PERIODS = {
 
 
 def context_from_verified_result(result):
-    """Extract business context only from approved analysis."""
+    """Extract business context only from verified agent results."""
+    if result.get("status") == "verified_sales_evidence":
+        extraction = result.get("extraction") or {}
+        review = result.get("review") or {}
+        contract = extraction.get("contract")
+
+        if (
+            extraction.get("status") != "supported"
+            or review.get("evidence_complete") is not True
+            or not isinstance(contract, PlanningContract)
+        ):
+            return None
+
+        if (
+            contract.stores is None
+            or contract.families is None
+            or len(contract.stores) != 1
+            or len(contract.families) != 1
+        ):
+            return None
+
+        store = next(iter(contract.stores))
+        family = next(iter(contract.families))
+        start = contract.period.start.isoformat()
+        end = contract.period.end.isoformat()
+        totals = review.get("verified_totals") or []
+
+        if (
+            review.get("period_start") != start
+            or review.get("period_end") != end
+            or len(totals) != 1
+            or totals[0].get("store_nbr") != store
+            or totals[0].get("family") != family
+        ):
+            return None
+
+        return {
+            "intent": "sales_total",
+            "store_nbr": store,
+            "family": family,
+            "when": f"{start}/{end}",
+        }
+
     if result.get("status") != "verified_analysis_evidence":
         return None
 
@@ -126,7 +170,20 @@ def plan_turn(question, context=None, known_families=()):
             ),
         }
 
-    if context["intent"] == "dependent_peak_day":
+    if context["intent"] == "sales_total":
+        if "/" in when:
+            start, end = when.split("/", 1)
+            period_phrase = f"from {start} to {end}"
+        else:
+            period_phrase = when
+
+        expanded = (
+            f"How much {family.lower()} should store "
+            f"{context['store_nbr']} expect to sell "
+            f"{period_phrase}?"
+        )
+
+    elif context["intent"] == "dependent_peak_day":
         expanded = (
             f"Which {family.lower()} store should expect "
             f"the most sales {when}, "
