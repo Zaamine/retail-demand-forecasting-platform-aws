@@ -1,0 +1,34 @@
+# Deny all files unless explicitly required.
+*
+
+!Dockerfile.planner
+
+# Application and shared source modules.
+!src/
+!src/**
+!app/
+!app/**
+
+# Curated business knowledge.
+!docs/
+!docs/knowledge/
+!docs/knowledge/*.md
+
+# Pinned workflow configuration.
+!configs/
+!configs/stepfunctions/
+!configs/stepfunctions/test_forecast_v2.json
+
+# Pinned forecast validation report.
+!artifacts/
+!artifacts/aws/
+!artifacts/aws/stepfunctions/
+!artifacts/aws/stepfunctions/test_forecast_v2/
+!artifacts/aws/stepfunctions/test_forecast_v2/prediction_report.json
+
+# Never include generated Python files or local secrets.
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
+**/.env
+**/.env.*

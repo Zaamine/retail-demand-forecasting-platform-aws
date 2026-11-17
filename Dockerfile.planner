@@ -1,0 +1,63 @@
+# Retail Planner application runtime for AWS ECS/Fargate.
+FROM python:3.12-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app:/app/src \
+    RETAIL_PLANNER_FORECAST_SOURCE=local \
+    RETAIL_PLANNER_ENABLE_BEDROCK=0
+
+WORKDIR /app
+
+# Install only the dependencies required by the application.
+# Model training and notebook dependencies are deliberately excluded.
+RUN python -m pip install --no-cache-dir \
+    numpy==2.5.3 \
+    pandas==3.0.6 \
+    scikit-learn==1.9.1 \
+    streamlit==1.67.0 \
+    altair==6.3.0 \
+    boto3==1.43.113 \
+    mcp==2.3.0 \
+    pyarrow==26.0.0
+
+# Copy application code and verified forecasting contracts.
+COPY src/ ./src/
+COPY app/ ./app/
+COPY docs/knowledge/ ./docs/knowledge/
+
+COPY configs/stepfunctions/test_forecast_v2.json \
+     ./configs/stepfunctions/test_forecast_v2.json
+
+COPY artifacts/aws/stepfunctions/test_forecast_v2/prediction_report.json \
+     ./artifacts/aws/stepfunctions/test_forecast_v2/prediction_report.json
+
+# Run the application as a non-root user.
+# The writable directory is required by the existing local Bedrock quota.
+RUN useradd --create-home --uid 10001 planner \
+    && mkdir -p /app/data/forecasts \
+    && chown -R planner:planner /app/data
+
+# Allow the non-root user to import the application source.
+# Keep application files owned by root and writable data separate.
+RUN chmod -R a+rX \
+    /app/src \
+    /app/app \
+    /app/docs \
+    /app/configs \
+    /app/artifacts
+
+USER planner
+
+EXPOSE 8501
+
+# Check the Streamlit server, not AWS data readiness.
+HEALTHCHECK --interval=30s --timeout=5s \
+    --start-period=45s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3).read()"
+
+CMD ["streamlit", "run", "app/streamlit_app.py", \
+     "--server.address=0.0.0.0", \
+     "--server.port=8501", \
+     "--server.headless=true", \
+     "--browser.gatherUsageStats=false"]
