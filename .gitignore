@@ -74,3 +74,7 @@ artifacts/aws/**/*.csv
 /notebooks/mlruns/
 /artifacts/evaluation/
 /artifacts/aws/bedrock/
+
+# Private legacy notebooks - never commit
+notebooks/legacy_07_forecast_investigation_genai_rag_finetuning_llmops.ipynb
+notebooks/legacy_09_retail_planner_agent_tool_use_and_mcp.ipynb
