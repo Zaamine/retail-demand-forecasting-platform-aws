@@ -1,10 +1,12 @@
 import asyncio
 import os
 import logging
+import json
 import streamlit as st
 import altair as alt
 import boto3
 from botocore.config import Config
+from botocore.exceptions import BotoCoreError, ClientError
 
 st.set_page_config(
     page_title="Retail Planner",
@@ -13,7 +15,12 @@ st.set_page_config(
 )
 
 st.title("Retail Planner")
-st.caption("Local preview — verified forecasting assistant")
+source_mode = os.getenv("RETAIL_PLANNER_FORECAST_SOURCE", "local")
+st.caption(
+    "AWS platform — verified published forecasts"
+    if source_mode == "s3"
+    else "Local preview — verified forecasting assistant"
+)
 
 # Keep messages across Streamlit reruns.
 if "messages" not in st.session_state:
@@ -48,6 +55,7 @@ from pathlib import Path
 import pandas as pd
 
 from planner_app.snapshot import load_verified_forecasts
+from planner_app.aws_backend import load_aws_planning_backend
 from planner_app.local_agent import build_local_planner, ask_local_planner
 from planner_app.bedrock_agent import build_bedrock_planner, ask_bedrock_planner
 from planner_app.live_quota import LocallyCappedBedrock
@@ -56,9 +64,36 @@ from planner_app.conversation import plan_turn, context_from_verified_result
 
 @st.cache_resource(show_spinner="Verifying forecast snapshot...")
 def get_forecasting_backend():
-    """Initialize the read-only forecasting backend once."""
+    """Initialize one trusted source for the explorer and MCP agent."""
     root = Path(__file__).resolve().parents[1]
-    return load_verified_forecasts(root)
+
+    if source_mode == "local":
+        forecasts, service = load_verified_forecasts(root)
+        return forecasts, service, None, None
+
+    if source_mode != "s3":
+        raise ValueError("Unsupported forecast source mode.")
+
+    run_id = os.getenv("RETAIL_PLANNER_S3_RUN_ID", "").strip()
+    if not run_id:
+        raise ValueError("Missing RETAIL_PLANNER_S3_RUN_ID.")
+
+    config_path = root / "configs/stepfunctions/test_forecast_v2.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    session = boto3.Session(region_name=config["region"])
+
+    account = session.client("sts").get_caller_identity()["Account"]
+    if account != config["account_id"]:
+        raise ValueError("Unexpected AWS account.")
+
+    snapshot, reader, status = load_aws_planning_backend(
+        root,
+        run_id=run_id,
+        s3_client=session.client("s3"),
+        stepfunctions_client=session.client("stepfunctions"),
+    )
+
+    return snapshot.forecasts, snapshot.forecast_service, reader, status
 
 
 st.divider()
@@ -66,10 +101,35 @@ st.subheader("Forecast Explorer")
 st.caption("Historical forecast origin: August 15, 2017")
 
 try:
-    forecasts, forecast_service = get_forecasting_backend()
-except (FileNotFoundError, OSError, KeyError, ValueError) as exc:
-    st.error(f"Cannot load verified forecasts: {exc}")
+    forecasts, forecast_service, status_reader, aws_status = (
+        get_forecasting_backend()
+    )
+except (
+    FileNotFoundError, OSError, KeyError, ValueError,
+    RuntimeError, ClientError, BotoCoreError,
+) as exc:
+    logging.exception("Forecast backend initialization failed")
+    if source_mode == "s3":
+        st.error("AWS forecast verification failed. Check the logs.")
+    else:
+        st.error(f"Cannot load verified forecasts: {exc}")
     st.stop()
+
+if aws_status is not None:
+    st.success("Published AWS forecasts and workflow verified")
+    with st.expander("AWS forecast provenance", expanded=True):
+        published = aws_status["published_estimates"]
+        workflow = aws_status["workflow"]
+        st.write("Forecast origin:", aws_status["business_date"])
+        st.write("Validated forecast rows:", published["forecast_rows"])
+        st.write("Store-family series:", published["store_family_series"])
+        st.write("Published S3 source:", published["source"])
+        st.write("Step Functions execution:", workflow["execution_name"])
+        st.write("Execution status:", workflow["execution_status"])
+        st.caption(
+            "Historical business dates are separate from the actual "
+            "AWS execution timestamps."
+        )
 
 stores = sorted(int(x) for x in forecasts["store_nbr"].unique())
 
@@ -220,6 +280,7 @@ if question:
                         capped_client,
                         enabled=True,
                         max_calls=6,
+                        status_reader=status_reader,
                     )
 
                     result = asyncio.run(
@@ -243,6 +304,7 @@ if question:
                         Path(__file__).resolve().parents[1],
                         forecasts,
                         forecast_service,
+                        status_reader=status_reader,
                     )
 
                     result = asyncio.run(

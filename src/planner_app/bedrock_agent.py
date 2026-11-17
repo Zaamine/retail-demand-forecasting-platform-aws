@@ -88,6 +88,7 @@ def build_bedrock_planner(
     *,
     enabled=False,
     max_calls=6,
+    status_reader=None,
 ):
     """Inject a bounded client into the existing agent components."""
     root = Path(project_root)
@@ -144,7 +145,9 @@ def build_bedrock_planner(
     server = build_retail_planner_mcp_server(
         forecast_service=forecast_service,
         knowledge_retriever=knowledge,
-        status_reader=local_status,
+        status_reader=(
+            status_reader if status_reader is not None else local_status
+        ),
     )
 
     return planner, server, budget

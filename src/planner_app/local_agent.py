@@ -36,7 +36,9 @@ class OfflineOrchestrator:
         }
 
 
-def build_local_planner(project_root, forecasts, forecast_service):
+def build_local_planner(
+    project_root, forecasts, forecast_service, *, status_reader=None
+):
     """Inject verified local dependencies into the existing agent."""
     root = Path(project_root)
 
@@ -65,7 +67,9 @@ def build_local_planner(project_root, forecasts, forecast_service):
     server = build_retail_planner_mcp_server(
         forecast_service=forecast_service,
         knowledge_retriever=knowledge,
-        status_reader=local_status,
+        status_reader=(
+            status_reader if status_reader is not None else local_status
+        ),
     )
 
     return planner, server
